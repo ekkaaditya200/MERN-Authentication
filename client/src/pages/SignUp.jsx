@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -22,10 +23,12 @@ const SignUp = () => {
           body: JSON.stringify(formData),
         })
       const data = await res.json();
+      setLoading(false);
       if (data.success == false) {
         setError(true);
+        return;
       }
-      setLoading(false);
+      navigate('/');
     } catch (error) {
       setError(true);
       setLoading(false);
