@@ -2,9 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from '../routes/user_route.js';
-dotenv.config();
 import authRoutes from '../routes/auth_route.js';
+import cookieParser from 'cookie-parser';
 
+dotenv.config();
 mongoose.connect(process.env.MONGO)
 .then(() => {
     console.log("Connect Successful");
@@ -16,6 +17,7 @@ mongoose.connect(process.env.MONGO)
 const PORT = 4000;
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/user',userRoutes);
 app.use('/api/auth',authRoutes);
