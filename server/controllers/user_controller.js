@@ -6,7 +6,7 @@ export const test = (req,res)=>{
     res.json({message:"API is working"})
 };
 
-//Update user
+//! Update User
 export const updateUser = async (req, res, next) => {
     if (req.user.id !== req.params.id) {
       return next(errorHandler(401, 'You can update only your account!'));
@@ -34,3 +34,18 @@ export const updateUser = async (req, res, next) => {
       next(error);
     }
   };
+
+
+//! Delete User
+export const deleteUser = async (req, res, next) => {
+  if(req.user.id!==req.params.id){
+    return next(errorHandler(401,"You can delete only your account !"));
+  }
+  try{
+    await User.findByIdAndDelete(req.params.id);
+    res.status(201).json('User has been deleted')
+  }catch(error)
+  {
+    next(error)
+  }
+}

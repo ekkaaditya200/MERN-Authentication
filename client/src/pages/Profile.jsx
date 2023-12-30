@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
-import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/userSlice/userSlice";
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from "../redux/userSlice/userSlice";
 import app from "../firebase";
 const Profile = () => {
   const [image, setImage] = useState(undefined);
@@ -69,6 +69,23 @@ const Profile = () => {
     }
   }
 
+  const handleOnDelete = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(updateUserFailure(error));
+    }
+  }
+
   return (
     <div className="p-3 max-w-lg mx-auto">
 
@@ -128,7 +145,7 @@ const Profile = () => {
       </form>
 
       <div className="flex justify-between mt-5 font-bold">
-        <span className='text-red-600 cursor-pointer'>Delete Account</span>
+        <span className='text-red-600 cursor-pointer' onClick={handleOnDelete}>Delete Account</span>
         <span className='text-red-600 cursor-pointer'>Sign Up</span>
       </div>
       <p className="text-red-600 font-bold">{error && 'Something went wrong!'}</p>
