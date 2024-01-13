@@ -29,7 +29,7 @@ const SignUp = () => {
         setError(true);
         return;
       }
-      navigate('/');
+      navigate('/sign-in');
     } catch (error) {
       setError(true);
       setLoading(false);
